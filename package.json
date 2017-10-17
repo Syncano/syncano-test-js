@@ -1,0 +1,33 @@
+{
+  "name": "syncano-test",
+  "description": "Testing tools for Syncnao Sockets",
+  "version": "0.2.0",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "dependencies": {
+    "ajv": "^5.2.3",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.26.0",
+    "bluebird": "^3.5.0",
+    "debug": "^3.0.1",
+    "faker": "^4.1.0",
+    "js-yaml": "^3.10.0",
+    "lodash.merge": "^4.6.0",
+    "mkdirp": "^0.5.1",
+    "nyc": "^11.2.1",
+    "proxyquire": "^1.8.0",
+    "readdirp": "^2.1.0",
+    "syncano-client": "beta"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "build:watch": "npm run build -- --watch",
+    "clean": "rimraf ./lib",
+    "prepublish": "npm run build",
+    "prebuild": "npm run clean"
+  }
+}
