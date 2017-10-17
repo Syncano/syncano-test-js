@@ -7,6 +7,7 @@ import path from 'path'
 import YAML from 'js-yaml'
 import Promise from 'bluebird'
 import proxyquire from 'proxyquire'
+import Validator from 'syncano-validator'
 
 const debug = logger('syncano-test')
 
@@ -51,47 +52,26 @@ const generateMeta = (endpointName, metaUpdate) => {
 }
 
 async function verifyResponse (endpoint, responseType, response) {
-  const endpointDefinition = socketDefinition.endpoints[endpoint]
-  const endpointDefParameters = socketDefinition.endpoints[endpoint].response[responseType].parameters
-  const ajv = new Ajv()
+  const validator = new Validator({
+    meta: {
+      metadata: socketDefinition.endpoints[endpoint]
+    }
+  })
 
-  const desiredExitCode = endpointDefinition.response[responseType].exit_code || 200
-  const desiredMimetype = endpointDefinition.mimetype || 'application/json'
+  return validator.validateResponse(responseType, response)
+}
 
-  if (response.code !== desiredExitCode) {
-    throw new Error(`Wrong exit code! Desired code is ${desiredExitCode}, got: ${response.code}`)
-  }
-
-  if (response.mimetype !== desiredMimetype) {
-    throw new Error(`Wrong mimetype! Desired mimetype is ${desiredMimetype}, got: ${response.mimetype}`)
-  }
-
-  const schema = {
-    type: 'object',
-    properties: endpointDefParameters,
-    additionalProperties: false
-  }
-
-  const validate = ajv.compile(schema)
-  const valid = validate(response.data)
-
-  if (!valid) {
-    const detailsMsg = validate.errors.map(err => {
-      return `     - ${err.message} (${JSON.stringify(err.params)})`
-    }).join('\n')
-
-    const error = new Error(`\n\n    Validation error:\n${detailsMsg}\n`)
-    error.details = validate.errors
-    throw error
-  } else {
-    return response
-  }
+async function verifyRequest (ctx) {
+  const validator = new Validator(ctx)
+  return validator.validateRequest(ctx)
 }
 
 function run (endpoint, ctx = {}, params = {}) {
   const {args = {'DEBUG': false}, config = {}, meta = {}} = ctx
   const mocks = params.mocks
   const socketMeta = generateMeta(endpoint, meta)
+
+  verifyRequest({args, config, meta: socketMeta})
 
   debug(`Running endpoint: ${endpoint}`)
   return new Promise(function (resolve, reject) {

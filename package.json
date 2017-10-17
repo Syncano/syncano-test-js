@@ -18,7 +18,8 @@
     "nyc": "^11.2.1",
     "proxyquire": "^1.8.0",
     "readdirp": "^2.1.0",
-    "syncano-client": "beta"
+    "syncano-client": "beta",
+    "syncano-validator": "^0.0.1"
   },
   "devDependencies": {
     "rimraf": "^2.6.2"
@@ -29,5 +30,17 @@
     "clean": "rimraf ./lib",
     "prepublish": "npm run build",
     "prebuild": "npm run clean"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "7"
+          }
+        }
+      ]
+    ]
   }
 }
