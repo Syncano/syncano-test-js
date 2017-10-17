@@ -1,15 +1,11 @@
-import Ajv from 'ajv'
 import fs from 'fs'
 import faker from 'faker'
 import merge from 'lodash.merge'
-import logger from 'debug'
 import path from 'path'
 import YAML from 'js-yaml'
 import Promise from 'bluebird'
 import proxyquire from 'proxyquire'
 import Validator from 'syncano-validator'
-
-const debug = logger('syncano-test')
 
 const socketFolder = process.cwd()
 const socketScriptsFolder = path.join(socketFolder, 'src')
