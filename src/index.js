@@ -69,7 +69,6 @@ function run (endpoint, ctx = {}, params = {}) {
 
   verifyRequest({args, config, meta: socketMeta})
 
-  debug(`Running endpoint: ${endpoint}`)
   return new Promise(function (resolve, reject) {
     let output = null
 
