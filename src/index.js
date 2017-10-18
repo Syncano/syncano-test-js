@@ -63,7 +63,7 @@ async function verifyRequest (ctx) {
 }
 
 function run (endpoint, ctx = {}, params = {}) {
-  const {args = {'DEBUG': false}, config = {}, meta = {}} = ctx
+  const {args = {}, config = {}, meta = {}} = ctx
   const mocks = params.mocks
   const socketMeta = generateMeta(endpoint, meta)
 
